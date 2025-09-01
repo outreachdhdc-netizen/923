@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopKart - Order Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f1f3f6;
+            color: #212121;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #2874f0;
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: bold;
+            font-style: italic;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 11px;
+            font-style: italic;
+            color: #ffe500;
+            margin-top: -5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-login {
+            background-color: white;
+            color: #2874f0;
+        }
+
+        .btn-more {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .cart {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .order-container {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .order-header {
+            background-color: #2874f0;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .order-id {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .order-date {
+            font-size: 14px;
+        }
+
+        .order-status {
+            background-color: #ffe500;
+            color: #212121;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .order-body {
+            padding: 25px;
+        }
+
+        .order-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background-color: #f7f9fc;
+            border-radius: 4px;
+            padding: 15px;
+            border-left: 4px solid #2874f0;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            color: #878787;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .order-items {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .order-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border: 1px solid #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #2874f0;
+            text-decoration: none;
+            display: block;
+        }
+
+        .item-name:hover {
+            text-decoration: underline;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2874f0;
+        }
+
+        .item-quantity {
+            font-size: 14px;
+            color: #878787;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: 1px solid #c2c2c2;
+            border-radius: 2px;
+            background: white;
+            color: #212121;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .action-btn-primary {
+            background-color: #2874f0;
+            color: white;
+            border: none;
+        }
+
+        .action-btn:hover {
+            background-color: #f1f1f1;
+        }
+
+        .action-btn-primary:hover {
+            background-color: #1c60c9;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #172337;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 0 16px;
+        }
+
+        .footer-column h3 {
+            font-size: 14px;
+            color: #878787;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-column ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 30px;
+            border-top: 1px solid #454d5e;
+            color: #878787;
+            font-size: 12px;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #878787;
+        }
+
+        .breadcrumb a {
+            color: #2874f0;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .order-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .order-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-body {
+                padding: 15px;
+            }
+            
+            .order-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .item-image {
+                align-self: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-text">ShopKart<span>Plus</span></div>
+            </a>
+            
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-more">Home</a>
+                <a href="cart.html" class="cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                </a>
+                <a href="login.html" class="btn btn-login">Login</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> > <a href="orders.html">My Orders</a> > Order Details
+        </div>
+        
+        <div class="page-title">
+            <i class="fas fa-file-alt"></i>
+            <h1>Order Details</h1>
+        </div>
+        
+        <div class="order-container">
+            <div class="order-header">
+                <div>
+                    <div class="order-id">Order #123456789</div>
+                    <div class="order-date">Placed on October 15, 2023 at 2:30 PM</div>
+                </div>
+                <div class="order-status">Delivered</div>
+            </div>
+            
+            <div class="order-body">
+                <div class="order-summary">
+                    <div class="summary-card">
+                        <div class="summary-title">DELIVERY ADDRESS</div>
+                        <div class="summary-value">
+                            John Smith<br>
+                            123 Main Street<br>
+                            Apt 4B<br>
+                            New York, NY 10001<br>
+                            United States<br>
+                            Phone: +1 234-567-8901
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <a href="addresses.html" class="action-btn" style="padding: 5px 10px; font-size: 12px;">Manage Addresses</a>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-title">PAYMENT METHOD</div>
+                        <div class="summary-value">
+                            Credit/Debit Card<br>
+                            **** **** **** 1234
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <a href="payment-methods.html" class="action-btn" style="padding: 5px 10px; font-size: 12px;">Manage Payment Methods</a>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-title">ORDER SUMMARY</div>
+                        <div class="summary-value">
+                            <div>Item Total: $299.97</div>
+                            <div>Delivery Fee: $0.00</div>
+                            <div style="font-weight: bold; margin-top: 5px;">Total Amount: $299.97</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-items">
+                    <h3 class="section-title">ORDER ITEMS (3)</h3>
+                    
+                    <a href="product-detail.html" class="order-item">
+                        <img src="https://via.placeholder.com/80" alt="Wireless Headphones" class="item-image">
+                        <div class="item-details">
+                            <div class="item-name">Wireless Bluetooth Headphones with Noise Cancellation</div>
+                            <div class="item-price">$99.99</div>
+                            <div class="item-quantity">Quantity: 1</div>
+                        </div>
+                    </a>
+                    
+                    <a href="product-detail.html" class="order-item">
+                        <img src="https://via.placeholder.com/80" alt="Fitness Tracker" class="item-image">
+                        <div class="item-details">
+                            <div class="item-name">Smart Fitness Tracker Watch - Black</div>
+                            <div class="item-price">$79.99</div>
+                            <div class="item-quantity">Quantity: 1</div>
+                        </div>
+                    </a>
+                    
+                    <a href="product-detail.html" class="order-item">
+                        <img src="https://via.placeholder.com/80" alt="Power Bank" class="item-image">
+                        <div class="item-details">
+                            <div class="item-name">Portable Power Bank 10000mAh - Fast Charging</div>
+                            <div class="item-price">$119.99</div>
+                            <div class="item-quantity">Quantity: 1</div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="action-btn">Cancel Order</button>
+                    <button class="action-btn">Return Items</button>
+                    <a href="#" class="action-btn action-btn-primary" id="downloadInvoice">Download Invoice</a>
+                    <a href="contact-support.html" class="action-btn">Contact Support</a>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="orders.html" class="btn btn-more" style="background-color: #2874f0; color: white;">Back to My Orders</a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>About</h3>
+                <ul>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="careers.html">Careers</a></li>
+                    <li><a href="press.html">Press</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="payments.html">Payments</a></li>
+                    <li><a href="shipping.html">Shipping</a></li>
+                    <li><a href="returns.html">Returns</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Policy</h3>
+                <ul>
+                    <li><a href="return-policy.html">Return Policy</a></li>
+                    <li><a href="terms.html">Terms of Use</a></li>
+                    <li><a href="security.html">Security</a></li>
+                    <li><a href="privacy.html">Privacy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Social</h3>
+                <ul>
+                    <li><a href="https://facebook.com/shopkart">Facebook</a></li>
+                    <li><a href="https://twitter.com/shopkart">Twitter</a></li>
+                    <li><a href="https://youtube.com/shopkart">YouTube</a></li>
+                    <li><a href="https://instagram.com/shopkart">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2023 ShopKart. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add functionality to action buttons
+            const actionButtons = document.querySelectorAll('.action-btn');
+            
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const buttonText = this.textContent;
+                    
+                    if (buttonText === 'Download Invoice') {
+                        alert('Invoice download started!');
+                    } else if (buttonText === 'Cancel Order') {
+                        alert('Order cancellation request submitted.');
+                    } else if (buttonText === 'Return Items') {
+                        alert('Return process initiated.');
+                    }
+                });
+            });
+            
+            // Add functionality to download invoice button
+            const downloadInvoice = document.getElementById('downloadInvoice');
+            if (downloadInvoice) {
+                downloadInvoice.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Invoice download started!');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

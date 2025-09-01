@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopKart - Online Shopping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f1f3f6;
+            color: #212121;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #2874f0;
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: bold;
+            font-style: italic;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 11px;
+            font-style: italic;
+            color: #ffe500;
+            margin-top: -5px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 2px;
+            overflow: hidden;
+            width: 500px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 16px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            background-color: #ffe500;
+            cursor: pointer;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 101;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f1f3f6;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-item:hover {
+            background-color: #f1f3f6;
+        }
+
+        .search-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-right: 12px;
+        }
+
+        .search-item-info {
+            flex: 1;
+        }
+
+        .search-item-title {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .search-item-price {
+            font-size: 14px;
+            font-weight: 500;
+            color: #388e3c;
+        }
+
+        .no-results {
+            padding: 12px 16px;
+            text-align: center;
+            color: #878787;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .btn-login {
+            background-color: white;
+            color: #2874f0;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-more {
+            background-color: transparent;
+            color: white;
+        }
+
+        .cart {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        /* Categories Bar */
+        .categories {
+            background-color: white;
+            padding: 12px 0;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .categories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #212121;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .category-item img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            margin-bottom: 8px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+
+        .banner {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .banner img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 500;
+            margin: 30px 0 20px;
+            color: #212121;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            padding: 15px;
+            border-bottom: 1px solid #f1f3f6;
+        }
+
+        .product-details {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #212121;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .current-price {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .original-price {
+            font-size: 14px;
+            color: #878787;
+            text-decoration: line-through;
+        }
+
+        .discount {
+            font-size: 14px;
+            color: #388e3c;
+        }
+
+        .product-rating {
+            background-color: #388e3c;
+            color: white;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        /* Add to Cart Button */
+        .add-to-cart {
+            width: 100%;
+            padding: 10px;
+            background-color: #ff9f00;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #ff8300;
+        }
+
+        /* Deals Section */
+        .deals-container {
+            background-color: white;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .deals-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .deals-timer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #7f7f7f;
+        }
+
+        .timer {
+            background-color: #f1f3f6;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #172337;
+            color: white;
+            padding: 40px 0 20px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 0 16px;
+        }
+
+        .footer-column h3 {
+            font-size: 14px;
+            color: #878787;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-column ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 30px;
+            border-top: 1px solid #454d5e;
+            color: #878787;
+            font-size: 12px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .products {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .categories-container {
+                overflow-x: auto;
+                gap: 15px;
+                padding-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .categories-container {
+                gap: 10px;
+            }
+            
+            .category-item {
+                min-width: 70px;
+            }
+            
+            .category-item img {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-text">ShopKart<span>Plus</span></div>
+            </a>
+            
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search for products, brands and more">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+                <div class="search-results" id="search-results">
+                    <!-- Search results will be displayed here -->
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-login">Login</a>
+               <button class="btn btn-more">More</button>
+                <a href="cart.html" class="cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Categories Bar -->
+    <div class="categories">
+        <div class="categories-container">
+            <a href="#" class="category-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/0/191.png" alt="Mobiles">
+                <span>Mobiles</span>
+            </a>
+            <a href="#" class="category-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/1198/1198409.png" alt="Fashion">
+                <span>Fashion</span>
+            </a>
+            <a href="#" class="category-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/2933/2933245.png" alt="Electronics">
+                <span>Electronics</span>
+            </a>
+            <a href="#" class="category-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/1261/1261162.png" alt="Home">
+                <span>Home</span>
+            </a>
+            <a href="#" class="category-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/1261/1261166.png" alt="Appliances">
+                <span>Appliances</span>
+            </a>
+            <a href="#" class="category-item">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThUCapv_MqAH0Hwux1fh_dUkyzpWTVgCnmCA&s" alt="Travel">
+                <span>Travel</span>
+            </a>
+            <a href="#" class="category-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Toys">
+                <span>Toys</span>
+            </a>
+            <a href="#" class="category-item">
+                <img src="https://cdn-icons-png.flaticon.com/512/1374/1374128.png" alt="Furniture">
+                <span>Furniture</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Banner -->
+        <div class="banner">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Sale Banner">
+        </div>
+        
+        <!-- Deals of the Day -->
+        <div class="deals-container">
+            <div class="deals-header">
+                <h2 class="section-title">Deals of the Day</h2>
+                <div class="deals-timer">
+                    <span>Ends in</span>
+                    <div class="timer">08:45:32</div>
+                </div>
+            </div>
+            
+            <div class="products" id="products-container">
+                <!-- Product 1 -->
+                <div class="product-card" data-name="smartphone mobile camera" data-category="electronics mobiles">
+                    <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c21hcnRwaG9uZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Smartphone" class="product-img">
+                    <div class="product-details">
+                        <div class="product-title">Smartphone with 48MP Camera, 6GB RAM, 5000mAh Battery</div>
+                        <div class="product-price">
+                            <div class="current-price">₹12,999</div>
+                            <div class="original-price">₹16,999</div>
+                            <div class="discount">23% off</div>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            4.5
+                        </div>
+                        <button class="add-to-cart" data-id="1" data-name="Smartphone" data-price="12999">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card" data-name="headphones wireless bluetooth noise cancellation" data-category="electronics audio">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Headphones" class="product-img">
+                    <div class="product-details">
+                        <div class="product-title">Wireless Bluetooth Headphones with Noise Cancellation</div>
+                        <div class="product-price">
+                            <div class="current-price">₹2,499</div>
+                            <div class="original-price">₹4,999</div>
+                            <div class="discount">50% off</div>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            4.2
+                        </div>
+                        <button class="add-to-cart" data-id="2" data-name="Headphones" data-price="2499">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card" data-name="smart tv 4k ultra hd android" data-category="electronics tv television">
+                    <img src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8dHZ8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Smart TV" class="product-img">
+                    <div class="product-details">
+                        <div class="product-title">Smart TV with 4K Ultra HD and Built-in Android</div>
+                        <div class="product-price">
+                            <div class="current-price">₹32,999</div>
+                            <div class="original-price">₹44,999</div>
+                            <div class="discount">26% off</div>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            4.3
+                        </div>
+                        <button class="add-to-cart" data-id="3" data-name="Smart TV" data-price="32999">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card" data-name="washing machine automatic" data-category="appliances home">
+                    <img src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8d2FzaGluZyUyMG1hY2hpbmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Washing Machine" class="product-img">
+                    <div class="product-details">
+                        <div class="product-title">Automatic Washing Machine with 8kg Capacity</div>
+                        <div class="product-price">
+                            <div class="current-price">₹18,490</div>
+                            <div class="original-price">₹24,990</div>
+                            <div class="discount">26% off</div>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            4.0
+                        </div>
+                        <button class="add-to-cart" data-id="4" data-name="Washing Machine" data-price="18490">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Offers -->
+        <h2 class="section-title">Top Offers</h2>
+        <div class="products">
+            <!-- Product 5 -->
+            <div class="product-card" data-name="shoes running men cushioning" data-category="fashion footwear">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Shoes" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Running Shoes with Cushioning for Men</div>
+                    <div class="product-price">
+                        <div class="current-price">₹1,599</div>
+                        <div class="original-price">₹3,999</div>
+                        <div class="discount">60% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.1
+                    </div>
+                    <button class="add-to-cart" data-id="5" data-name="Running Shoes" data-price="1599">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Product 6 -->
+            <div class="product-card" data-name="laptop ram ssd intel i5 processor" data-category="electronics computers">
+                <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Laptop" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Laptop with 8GB RAM, 512GB SSD, Intel i5 Processor</div>
+                    <div class="product-price">
+                        <div class="current-price">₹54,990</div>
+                        <div class="original-price">₹69,990</div>
+                        <div class="discount">21% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.4
+                    </div>
+                    <button class="add-to-cart" data-id="6" data-name="Laptop" data-price="54990">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Product 7 -->
+            <div class="product-card" data-name="smart watch heart rate monitor gps" data-category="electronics wearables">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2F0Y2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Smart Watch" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Smart Watch with Heart Rate Monitor and GPS</div>
+                    <div class="product-price">
+                        <div class="current-price">₹2,999</div>
+                        <div class="original-price">₹6,999</div>
+                        <div class="discount">57% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.0
+                    </div>
+                    <button class="add-to-cart" data-id="7" data-name="Smart Watch" data-price="2999">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Product 8 -->
+            <div class="product-card" data-name="gaming mouse wireless rgb lighting" data-category="electronics computers accessories">
+                <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Z2FtaW5nJTIwbW91c2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Gaming Mouse" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Wireless Gaming Mouse with RGB Lighting</div>
+                    <div class="product-price">
+                        <div class="current-price">₹1,299</div>
+                        <div class="original-price">₹2,499</div>
+                        <div class="discount">48% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.2
+                    </div>
+                    <button class="add-to-cart" data-id="8" data-name="Gaming Mouse" data-price="1299">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trending Products -->
+        <h2 class="section-title">Trending Products</h2>
+        <div class="products">
+            <!-- Product 9 -->
+            <div class="product-card" data-name="earbuds wireless bluetooth battery life" data-category="electronics audio">
+                <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZWFyYnVkc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Earbuds" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Wireless Earbuds with 20 Hours Battery Life</div>
+                    <div class="product-price">
+                        <div class="current-price">₹1,799</div>
+                        <div class="original-price">₹3,999</div>
+                        <div class="discount">55% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.3
+                    </div>
+                    <button class="add-to-cart" data-id="9" data-name="Wireless Earbuds" data-price="1799">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Product 10 -->
+            <div class="product-card" data-name="camera dslr professional 24mp sensor" data-category="electronics photography">
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FtZXJhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Camera" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Professional DSLR Camera with 24MP Sensor</div>
+                    <div class="product-price">
+                        <div class="current-price">₹45,999</div>
+                        <div class="original-price">₹59,999</div>
+                        <div class="discount">23% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.6
+                    </div>
+                    <button class="add-to-cart" data-id="10" data-name="DSLR Camera" data-price="45999">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Product 11 -->
+            <div class="product-card" data-name="air purifier hepa filter large rooms" data-category="appliances home">
+                <img src="https://images.unsplash.com/photo-1593341646782-e0b495cff86d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGFpciUyMHB1cmlmaWVyfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Air Purifier" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Air Purifier with HEPA Filter for Large Rooms</div>
+                    <div class="product-price">
+                        <div class="current-price">₹8,999</div>
+                        <div class="original-price">₹12,999</div>
+                        <div class="discount">30% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.1
+                    </div>
+                    <button class="add-to-cart" data-id="11" data-name="Air Purifier" data-price="8999">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Product 12 -->
+            <div class="product-card" data-name="electric kettle stainless steel" data-category="appliances kitchen">
+                <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8a2V0dGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Kettle" class="product-img">
+                <div class="product-details">
+                    <div class="product-title">Electric Kettle with Stainless Steel Body</div>
+                    <div class="product-price">
+                        <div class="current-price">₹899</div>
+                        <div class="original-price">₹1,499</div>
+                        <div class="discount">40% off</div>
+                    </div>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        4.3
+                    </div>
+                    <button class="add-to-cart" data-id="12" data-name="Electric Kettle" data-price="899">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>About</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#">Payments</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Policy</h3>
+                <ul>
+                    <li><a href="#">Return Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Privacy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Social</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">YouTube</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2025 ShopKart. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Simple timer for deals section
+        function updateTimer() {
+            const timerElement = document.querySelector('.timer');
+            let time = timerElement.textContent.split(':');
+            let hours = parseInt(time[0]);
+            let minutes = parseInt(time[1]);
+            let seconds = parseInt(time[2]);
+            
+            seconds--;
+            
+            if (seconds < 0) {
+                seconds = 59;
+                minutes--;
+                
+                if (minutes < 0) {
+                    minutes = 59;
+                    hours--;
+                    
+                    if (hours < 0) {
+                        hours = 23;
+                    }
+                }
+            }
+            
+            timerElement.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        setInterval(updateTimer, 1000);
+
+        // Add to Cart functionality
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const price = this.getAttribute('data-price');
+                
+                // Get existing cart items from localStorage
+                let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                
+                // Check if item already exists in cart
+                const existingItem = cartItems.find(item => item.id === id);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cartItems.push({
+                        id,
+                        name,
+                        price,
+                        quantity: 1
+                    });
+                }
+                
+                // Save updated cart to localStorage
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                
+                // Show confirmation
+                alert(`${name} added to cart!`);
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const productCards = document.querySelectorAll('.product-card');
+        const productsContainer = document.getElementById('products-container');
+        
+        // Store all products for search
+        const allProducts = Array.from(productCards).map(card => {
+            return {
+                element: card,
+                name: card.getAttribute('data-name'),
+                category: card.getAttribute('data-category'),
+                title: card.querySelector('.product-title').textContent,
+                price: card.querySelector('.current-price').textContent,
+                image: card.querySelector('.product-img').src
+            };
+        });
+        
+        // Function to filter products based on search query
+        function filterProducts(query) {
+            if (!query) return allProducts;
+            
+            const lowerQuery = query.toLowerCase();
+            return allProducts.filter(product => {
+                return (
+                    product.name.toLowerCase().includes(lowerQuery) ||
+                    product.category.toLowerCase().includes(lowerQuery) ||
+                    product.title.toLowerCase().includes(lowerQuery)
+                );
+            });
+        }
+        
+        // Function to display search results
+        function displaySearchResults(results) {
+            searchResults.innerHTML = '';
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="no-results">No products found</div>';
+                return;
+            }
+            
+            results.slice(0, 5).forEach(product => {
+                const searchItem = document.createElement('div');
+                searchItem.className = 'search-item';
+                searchItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}">
+                    <div class="search-item-info">
+                        <div class="search-item-title">${product.title}</div>
+                        <div class="search-item-price">${product.price}</div>
+                    </div>
+                `;
+                
+                searchItem.addEventListener('click', () => {
+                    // Scroll to the product
+                    product.element.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Highlight the product temporarily
+                    product.element.style.boxShadow = '0 0 0 2px #2874f0';
+                    setTimeout(() => {
+                        product.element.style.boxShadow = '';
+                    }, 2000);
+                    
+                    // Close search results
+                    searchResults.classList.remove('active');
+                    searchInput.value = '';
+                });
+                
+                searchResults.appendChild(searchItem);
+            });
+        }
+        
+        // Event listener for search input
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim();
+            
+            if (query.length > 1) {
+                const results = filterProducts(query);
+                displaySearchResults(results);
+                searchResults.classList.add('active');
+            } else {
+                searchResults.classList.remove('active');
+            }
+        });
+        
+        // Event listener for search button
+        document.getElementById('search-button').addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            
+            if (query.length > 0) {
+                const results = filterProducts(query);
+                
+                // Hide all products first
+                productCards.forEach(card => {
+                    card.style.display = 'none';
+                });
+                
+                // Show only matching products
+                results.forEach(product => {
+                    product.element.style.display = 'block';
+                });
+                
+                // Scroll to products section
+                document.querySelector('.section-title').scrollIntoView({ behavior: 'smooth' });
+                    
+                // Close search results
+                searchResults.classList.remove('active');
+            }
+        });
+        
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('active');
+            }
+        });
+        
+        // Allow pressing Enter to search
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('search-button').click();
+            }
+        });
+    </script>
+</body>
+</html>
